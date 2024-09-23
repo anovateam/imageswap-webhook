@@ -274,6 +274,12 @@ def swap_image(container_spec):
     no_registry = False
     library_image = False
 
+    # special case when the image is a library image but also has docker.io
+    # example: 'docker.io/alpine:latest'
+    if image_split[0] == "docker.io" and "/" not in image_split[2]:
+        image = image.replace("docker.io/", "")
+        image_split = image.partition("/")
+
     # Check if first section is a Registry URL
     if "." in image_split[0] and image_split[1] != "" and image_split[2] != "":
         image_registry = image_split[0]
